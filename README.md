@@ -1,8 +1,6 @@
 ## OpenShift Do-It-Yourself
 
-The OpenShift `diy` cartridge documentation can be found at:
-
-http://openshift.github.io/documentation/oo_cartridge_guide.html#diy
+The OpenShift `diy` cartridge documentation can be found [here](https://github.com/openshift/origin-server/blob/master/documentation/oo_cartridge_guide.adoc)
 
 ## Mako Server
 
@@ -53,5 +51,5 @@ kill `ps -ef | grep mako | grep -v grep | awk '{ print $2 }'`
 
 ### Example
 
-See [DIY](diy.yvanhom.com).
+See [DIY](https://diy.yvanhom.com).
 
