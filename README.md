@@ -22,11 +22,11 @@ Mako Server deploys **Lua Server Pages* (LSP), which are based on the Lua script
 
 Mako Server forcely binds both http port and https/ssl port. However, OpenShift DIY can only supports binding 8080. Therefore https/ssl must be disabled. 
 
-I unzip *mako.zip*, and comment all codes related to https/ssl in file *.openports*, and rezip *mako.zip*.
+I unzip *mako.zip*, comment all codes related to https/ssl in file *.openports*, and rezip *mako.zip*.
 
 ### Work with DIY
 
-*.openshift/action_hooks/start* is responsible for starting the MakoServer. It generates *mako.conf*, and then start *mako* in daemon mode.
+*.openshift/action_hooks/start* is responsible for starting the MakoServer. It generates *mako.conf*, and then starts *mako* in daemon mode.
 
 ```sh
 # Part of start
@@ -50,5 +50,8 @@ ${MAKODIR}/mako -c ${MAKODIR}/mako.conf -d
 # Part of stop
 kill `ps -ef | grep mako | grep -v grep | awk '{ print $2 }'`
 ```
-```
+
+### Example
+
+See [DIY](diy.yvanhom.com).
 
