@@ -2,4 +2,27 @@
 # The logic to start up your application should be put in this
 # script. The application will work only if it binds to
 # $OPENSHIFT_DIY_IP:8080
-nohup $OPENSHIFT_REPO_DIR/diy/testrubyserver.rb $OPENSHIFT_DIY_IP $OPENSHIFT_REPO_DIR/diy |& /usr/bin/logshifter -tag diy &
+# nohup $OPENSHIFT_REPO_DIR/diy/testrubyserver.rb $OPENSHIFT_DIY_IP $OPENSHIFT_REPO_DIR/diy |& /usr/bin/logshifter -tag diy &
+
+strong() {
+    echo -n -e "\033[32;49;1m"
+    echo $@
+    echo -n -e "\033[39;49;0m"
+}
+
+MAKODIR=${OPENSHIFT_REPO_DIR}/mako
+
+strong "Generate mako.conf"
+cat << EOF > ${MAKODIR}/mako.conf
+port=$OPENSHIFT_DIY_PORT
+host="$OPENSHIFT_DIY_IP"
+apps={
+    {
+        name="", 
+        path="$OPENSHIFT_REPO_DIR/diy"
+    }
+}
+EOF
+
+strong "Start MakoServer"
+${MAKODIR}/mako -c ${MAKODIR}/mako.conf -d
