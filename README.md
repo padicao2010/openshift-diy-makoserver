@@ -15,6 +15,7 @@ Mako Server deploys **Lua Server Pages* (LSP), which are based on the Lua script
 + **.openshift**: profiles for OpenShift Do-It-Yourself
 + **diy**: contents of the web application
 + **mako**: files related to Mako Server, including binary and configuration
++ **libs**: put *lua libraries* here and use *require "libs.xxx"*.
 
 ### Modify Mako Server
 
