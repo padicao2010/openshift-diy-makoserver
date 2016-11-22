@@ -10,7 +10,9 @@ strong() {
     echo -n -e "\033[39;49;0m"
 }
 
+RUNDIR=${OPENSHIFT_REPO_DIR}
 MAKODIR=${OPENSHIFT_REPO_DIR}/mako
+DBDIR=${OPENSHIFT_DATA_DIR}/db
 
 strong "Generate mako.conf"
 cat << EOF > ${MAKODIR}/mako.conf
@@ -24,5 +26,10 @@ apps={
 }
 EOF
 
+strong "Link data dir"
+mkdir -p ${DBDIR}
+ln -s $DBDIR ${MAKODIR}/data
+
 strong "Start MakoServer"
+cd ${RUNDIR}
 ${MAKODIR}/mako -c ${MAKODIR}/mako.conf -d
