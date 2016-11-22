@@ -27,8 +27,12 @@ apps={
 EOF
 
 strong "Link data dir"
-mkdir -p ${DBDIR}
-ln -s $DBDIR ${MAKODIR}/data
+if [ ! -d "${DBDIR}" ]; then
+    mkdir -p ${DBDIR}
+fi
+if [ ! -d "${MAKODIR}/data" ]; then
+    ln -s $DBDIR ${MAKODIR}/data
+fi
 
 strong "Start MakoServer"
 cd ${RUNDIR}
