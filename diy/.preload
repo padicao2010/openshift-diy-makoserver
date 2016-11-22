@@ -1,0 +1,39 @@
+print("-- initialize app")
+DBFILE = "pfm"
+REALM = "PFM"
+-- For auth
+AUTH_DIR = ba.create.dir(nil, 2)
+-- For redirect
+PERPAGE = 10
+WALLETS = {}
+PFM = require "libs.pfm"
+
+if not PFM.checkDB(app) then
+    PFM.initDB(app)
+else
+    local sqenv, sqcon = PFM.openDB(app)
+    WALLETS = PFM.updateCache(app, sqcon)
+    PFM.closeDB(sqenv, sqcon)
+end
+
+print("-- Set authenticator")
+local dir = AUTH_DIR
+dir:insert()
+local authuser = ba.create.authuser(function(user)
+    return app.PFM.getPassword(app, user)
+end)
+local function loginresponse(_ENV, au)
+    local uri = request:uri()
+    if string.match(uri, "^/assets/") then
+        response:forward(uri)
+    else
+        authinfo = au
+        if authinfo.username then
+            ba_info = "Email or password is not correct"
+        end
+        response:forward(".login.lsp")
+    end
+end
+local authenticator=ba.create.authenticator(
+   authuser,{type="form", response=loginresponse})
+dir:setauth(authenticator)
