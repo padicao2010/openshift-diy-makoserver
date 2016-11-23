@@ -5,11 +5,19 @@ local function getHA1(user, pass, realm)
     return ha1
 end
 
-local function getLastMonth(year, month)
-    if month > 1 then
-        return year, month - 1
+local function getLastMonth(y, m)
+    if m > 1 then
+        return y, m - 1
     else
-        return year - 1, 12
+        return y - 1, 12
+    end
+end
+
+local function getNextMonth(y, m)
+    if m < 12 then
+        return y, m + 1
+    else
+        return y + 1, 1
     end
 end
 
@@ -324,6 +332,95 @@ UPDATE pfm_wallet SET money=money+%f WHERE id=%d;
     end
 end
 
+local function calculateMonthBalance(con, y, m)
+    local t = os.time{year = y, month = m, day = 1}
+    local ny, nm = getNextMonth(y, m)
+    local nt = os.time{year = ny, month = nm, day = 1}
+    
+    local cur = assert(con:execute(string.format([[
+SELECT SUM(money) FROM pfm_transfer
+WHERE source=1 AND time>=%d AND time<%d;
+    ]], t, nt)))
+    local income = cur:fetch() or 0
+    
+    cur = assert(con:execute(string.format([[
+SELECT SUM(money) FROM pfm_entry
+WHERE time>=%d AND time<%d;
+    ]], t, nt)))
+    local outcome = cur:fetch() or 0
+    
+    return income, outcome
+end
+
+local function calculateRemain(con)
+    local cur = assert(con:execute([[
+SELECT SUM(money) from pfm_wallet
+WHERE id!=1;
+    ]]))
+    local remain = cur:fetch() or 0
+    return remain
+end
+
+local function getAndUpdate(con)
+    local cur = assert(con:execute([[
+SELECT * FROM pfm_month
+ORDER BY year, month;
+    ]]))
+    local months = {}
+    local y, m, income, outcome, remain = cur:fetch()
+    while y do
+        table.insert(months, { year = tonumber(y), month = tonumber(m), income = tonumber(income), outcome = tonumber(outcome), remain = tonumber(remain) })
+        y, m, income, outcome, remain = cur:fetch()
+    end
+    
+    local lastrecord = #months
+    local recordy, recordm = months[lastrecord].year, months[lastrecord].month
+    local cury, curm = tonumber(os.date("%Y")), tonumber(os.date("%m"))
+    
+    if recordy < cury or (recordy == cury and recordm < curm) then
+        local i, j = recordy, recordm
+        local inc, outc
+        while i ~= cury or j ~= curm do
+            i, j = getNextMonth(i, j)
+            inc, outc = calculateMonthBalance(con, i, j)
+            table.insert(months, { year = i, month = j, income = inc, outcome = outc, remain = 0.0 })
+        end
+    end
+    local remain = calculateRemain(con)
+    local currecord = #months
+    months[currecord].remain = remain
+    for i = currecord-1, lastrecord+1,-1 do
+        local nm = months[i+1]
+        months[i].remain = nm.remain + nm.outcome - nm.income
+    end
+    
+    for i = lastrecord + 1, currecord - 1 do
+        local record = months[i]
+        assert(con:execute(string.format([[
+INSERT INTO pfm_month VALUES (%d, %d, %f, %f, %f);
+            ]], record,year, record.month, 
+            record.income, record.outcome, record.remain)))
+    end
+    
+    local startremain = months[2].remain + months[2].outcome - months[2].income
+    if math.abs(startremain - months[1].remain) >= 0.01 then
+        assert(con:execute(string.format([[
+UPDATE pfm_month SET remain=%f
+WHERE year=%d AND month=%d;
+        ]], startremain, months[1].year, months[1].month)))
+    end
+    
+    local all = { income = 0, outcome = 0, remain = remain}
+    cur = assert(con:execute([[
+SELECT money FROM pfm_wallet
+WHERE id=1;
+        ]]))
+    all.income = -(cur:fetch() or 0)
+    all.outcome = startremain + all.income - remain
+    
+    return months, all
+end
+
 return {
     updateCache = updateCache,
     
@@ -350,4 +447,6 @@ return {
     getTransferCount = getTransferCount,
     getTransfers = getTransfers,
     addTransfer = addTransfer,
+    
+    getAndUpdate = getAndUpdate,
 }

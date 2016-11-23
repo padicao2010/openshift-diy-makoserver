@@ -41,32 +41,14 @@
             <div class="row">
                 <div class="col-sm-8 col-sm-offset-2 col-md-8 col-md-offset-2">
 <?lsp
-    local su = require "sqlutil"
-    local sqenv, sqcon = su.open(app.DBFILE)
-    local cur = assert(sqcon:execute([[
-SELECT money FROM pfm_wallet WHERE id=1;
-    ]]))
-    income = -tonumber(cur:fetch() or 0)
-    cur = assert(sqcon:execute([[
-SELECT SUM(money) FROM pfm_wallet WHERE id!=1;
-    ]]))
-    remain = tonumber(cur:fetch() or 0)
-    cur = assert(sqcon:execute([[
-SELECT SUM(money) FROM pfm_entry;
-    ]]))
-    outcome = tonumber(cur:fetch() or 0)
-
-    cur = assert(sqcon:execute([[
-SELECT * FROM pfm_month
-ORDER BY year, month;
-    ]]))
-    local y, m, inc, out, rem = cur:fetch()
-    months = {}
-    while y do
-        y, m, inc, out, rem = cur:fetch()
-        table.insert(months, {year = y, month = m, income = inc, outcome = out, remain = rem })
+    local sqenv, sqcon = app.PFM.openDB(app)
+    months, all = app.PFM.getAndUpdate(sqcon)
+    app.PFM.closeDB(sqenv, sqcon)
+    curMonth = months[#months]
+    lastMonth = months[#months - 1]
+    if #months > 2 then
+        recordLast = true
     end
-    su.close(sqenv, sqcon)
 ?>
                     <h2>Summary</h2>
                     <table class="table table-hover">
@@ -81,21 +63,21 @@ ORDER BY year, month;
                         <tbody>
                             <tr>
                                 <th>Income</th>
-                                <td></td>
-                                <td></td>
-                                <td><?lsp= income ?></td>
+                                <td><?lsp= recordLast and lastMonth.income or "UNRECORD" ?></td>
+                                <td><?lsp= curMonth.income ?></td>
+                                <td><?lsp= all.income ?></td>
                             </tr>
                             <tr>
                                 <th>Outcome</th>
-                                <td></td>
-                                <td></td>
-                                <td><?lsp= outcome ?></td>
+                                <td><?lsp= recordLast and lastMonth.outcome or "UNRECORD" ?></td>
+                                <td><?lsp= curMonth.outcome ?></td>
+                                <td><?lsp= all.outcome ?></td>
                             </tr>
                             <tr>
                                 <th>Remain</th>
-                                <td></td>
-                                <td></td>
-                                <td><?lsp= remain ?></td>
+                                <td><?lsp= lastMonth.remain ?></td>
+                                <td><?lsp= curMonth.remain ?></td>
+                                <td><?lsp= all.remain ?></td>
                             </tr>
                         <tbody>
                     </table>
