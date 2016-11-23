@@ -57,7 +57,7 @@
                                 <th></th>
                                 <th>Last Month</th>
                                 <th>Current Month<th>
-                                <th>Remain</th>
+                                <th>Summary</th>
                             </tr>
                         </thead>
                         <tbody>
@@ -93,7 +93,7 @@
         <script>
         var ctx = document.getElementById("myChart");
         var myChart = new Chart(ctx, {
-            type: 'bar',
+            type: <?lsp= (#months <= 5) and "'bar'" or "'line'" ?>,
             data: {
                 labels: [<?lsp
                     for i, m in ipairs(months) do
