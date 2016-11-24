@@ -56,8 +56,8 @@
                             <tr>
                                 <th></th>
                                 <th>Last Month</th>
-                                <th>Current Month<th>
-                                <th>Summary</th>
+                                <th>Current Month</th>
+                                <th class="text-right">Summary</th>
                             </tr>
                         </thead>
                         <tbody>

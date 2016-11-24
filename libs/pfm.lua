@@ -295,7 +295,7 @@ LIMIT %d, %d;
     local results = {}
     local id, source, dest, aim, time, money = cur:fetch()
     while id do
-        table.insert(results, {id = id, source = source, dest = dest, aim = aim, money = money})
+        table.insert(results, {id = id, source = source, dest = dest, aim = aim, time = time, money = money})
         id, source, dest, aim, time, money = cur:fetch()
     end
     return results
