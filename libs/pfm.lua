@@ -421,6 +421,141 @@ WHERE id=1;
     return months, all
 end
 
+local function export(con, response)
+    response:reset()
+    response:setheader("Content-Type","application/json")
+    response:setheader("Cache-Control",
+                   "no-store, no-cache, must-revalidate, max-age=0")
+    response:write([[
+{
+    "user" : [
+        ]])
+    local cur = assert(con:execute([[
+SELECT * FROM pfm_user;
+        ]]))
+    do
+        local t = {}
+        t.id, t.email, t.password = cur:fetch()
+        while t.id do
+            t.id = tonumber(t.id)
+            response:write(ba.json.encode(t))
+            t.id, t.email, t.password = cur:fetch()
+            if t.id then
+                response:write([[,
+        ]])
+            end
+        end
+    end
+    
+    response:write([[
+
+    ],
+    "wallet" : [
+        ]])
+    cur = assert(con:execute([[
+SELECT * FROM pfm_wallet;
+        ]]))
+    do
+        local t = {}
+        t.id, t.name, t.money = cur:fetch()
+        while t.id do
+            t.id = tonumber(t.id)
+            t.money = tonumber(t.money)
+            response:write(ba.json.encode(t))
+            t.id, t.name, t.money = cur:fetch()
+            if t.id then
+                response:write([[,
+        ]])
+            end
+        end
+    end
+    
+    response:write([[
+
+    ],
+    "entry" : [
+        ]])
+    cur = assert(con:execute([[
+SELECT * FROM pfm_entry;
+        ]]))
+    do
+        local t = {}
+        t.id, t.wallet, t.aim, t.site, t.money, t.time = cur:fetch()
+        while t.id do
+            t.id = tonumber(t.id)
+            t.wallet = tonumber(t.wallet)
+            t.money = tonumber(t.money)
+            t.time = tonumber(t.time)
+            
+            response:write(ba.json.encode(t))
+            t.id, t.wallet, t.aim, t.site, t.money, t.time = cur:fetch()
+            if t.id then
+                response:write([[,
+        ]])
+            end
+        end
+    end
+    
+    response:write([[
+
+    ],
+    "transfer" : [
+        ]])
+    cur = assert(con:execute([[
+SELECT * FROM pfm_transfer;
+        ]]))
+    do
+        local t = {}
+        t.id, t.source, t.dest, t.aim, t.time, t.money = cur:fetch()
+        while t.id do
+            t.id = tonumber(t.id)
+            t.source = tonumber(t.source)
+            t.dest = tonumber(t.dest)
+            t.time = tonumber(t.time)
+            t.money = tonumber(t.money)
+
+            response:write(ba.json.encode(t))
+            t.id, t.source, t.dest, t.aim, t.time, t.money = cur:fetch()
+            if t.id then
+                response:write([[,
+        ]])
+            end
+        end
+    end
+    
+    response:write([[
+
+    ],
+    "month" : [
+        ]])
+    cur = assert(con:execute([[
+SELECT * FROM pfm_month;
+        ]]))
+    do
+        local t = {}
+        t.year, t.month, t.income, t.outcome, t.remain = cur:fetch()
+        while t.year do
+            t.year = tonumber(t.year)
+            t.month = tonumber(t.month)
+            t.income = tonumber(t.income)
+            t.outcome = tonumber(t.outcome)
+            t.remain = tonumber(t.remain)
+
+            response:write(ba.json.encode(t))
+            t.year, t.month, t.income, t.outcome, t.remain = cur:fetch()
+            if t.year then
+                response:write([[,
+        ]])
+            end
+        end
+    end
+    
+    response:write([[
+
+    ]
+}]])
+end
+
 return {
     updateCache = updateCache,
     
@@ -449,4 +584,5 @@ return {
     addTransfer = addTransfer,
     
     getAndUpdate = getAndUpdate,
+    export = export;
 }

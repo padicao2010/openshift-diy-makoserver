@@ -4,6 +4,18 @@ REALM = "PFM"
 -- For auth
 AUTH_DIR = ba.create.dir(nil, 2)
 -- For redirect
+REDIRECT_URIS = { 
+    ["logout"] = ".logout.lsp",
+    ["settings"] = ".settings.lsp",
+    ["changepw"] = ".changepw.lsp",
+    ["wallet"] = ".wallet.lsp",
+    ["addwallet"] = ".addwallet.lsp",
+    ["entry"] = ".entry.lsp",
+    ["addentry"] = ".addentry.lsp",
+    ["transfer"] = ".transfer.lsp",
+    ["addtransfer"] = ".addtransfer.lsp",
+    ["export"] = ".export.lsp",
+}
 PERPAGE = 10
 WALLETS = {}
 PFM = require "libs.pfm"

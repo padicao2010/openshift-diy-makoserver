@@ -39,33 +39,37 @@
         </nav>
         <div class="container">
             <div class="row">
-                <div class="col-sm-8 col-sm-offset-2 col-md-8 col-md-offset-2">
-                    <form>
-                        <div class="col-sm-8 col-sm-offset-2 col-md-6 col-md-offset-3">
-                            <h3 class="text-center">Change Password</h3>
-                            <div class="form-group">
-                                <label for="curPassword2">Current Password</label>
-                                <input type="password" class="form-control" id="curPassword2" placeholder="Password">
-                            </div>
-                            <div class="form-group">
-                                <label for="newPassword2">New Password</label>
-                                <input type="password" class="form-control" id="newPassword2" placeholder="Password">
-                            </div>
-                            <div class="form-group">
-                                <label for="againPassword">Password Again</label>
-                                <input type="password" class="form-control" id="againPassword" placeholder="Password">
-                            </div>
-                            <input type="hidden" name="curPassword">
-                            <input type="hidden" name="newPassword">
-                            <input type="hidden" name="username" value="<?lsp=request:user() ?>">
-                            <input type="hidden" name="realm" value="<?lsp= app.REALM ?>">
-                            <p class="text-warning" id="ba_info"><?lsp= ba_info or "" ?></p>
-                            <div class="form-group">
-                                <button type="submit" id="ba_changepw" class="btn btn-default">Update</button>
-                            </div>
-                        </div>
-                    </form>
+                <div class="col-sm-5 col-md-5 col-sm-offset-1 col-sm-offset-1">
+                   <form>
+                       <h3>Change Password</h3>
+                       <hr>
+                       <div class="form-group">
+                           <label for="curPassword2">Current Password</label>
+                           <input type="password" class="form-control" id="curPassword2" placeholder="Password">
+                       </div>
+                       <div class="form-group">
+                           <label for="newPassword2">New Password</label>
+                           <input type="password" class="form-control" id="newPassword2" placeholder="Password">
+                       </div>
+                       <div class="form-group">
+                           <label for="againPassword">Password Again</label>
+                           <input type="password" class="form-control" id="againPassword" placeholder="Password">
+                       </div>
+                       <input type="hidden" name="curPassword">
+                       <input type="hidden" name="newPassword">
+                       <input type="hidden" name="username" value="<?lsp=request:user() ?>">
+                       <input type="hidden" name="realm" value="<?lsp= app.REALM ?>">
+                       <p class="text-warning" id="ba_info"><?lsp= ba_info or "" ?></p>
+                       <div class="form-group">
+                           <button type="submit" id="ba_changepw" class="btn btn-default">Update</button>
+                       </div>
+                   </form>
                 </div>
+               <div class="col-sm-5  col-md-5 col-sm-offset-1 col-md-offset-1">
+                   <h3>Import and Export</h3>
+                   <hr>
+                   <a href="index.lsp?r=export&file=pfm-<?lsp= os.date('%Y-%m-%d') ?>.json" class="btn btn-default text-center" role="button" target="_blank">Export to JSON</a>
+               </div>
             </div>
         </div>
         <script src="assets/js/jquery.min.js"></script>
