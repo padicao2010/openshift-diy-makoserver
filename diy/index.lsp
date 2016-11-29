@@ -1,14 +1,9 @@
-<html>
-    <body>
-        <h1>Barracuda App Server</h1>
-        <p>Version: <?lsp
-                print(ba.version())
-            ?>
-        </p>
-        <h1>Lua</h1>
-        <p>Version: <?lsp
-                print(_VERSION)
-            ?>
-        </p>
-    </body>
-</html>
+<?lsp
+    local rs = app.REDIRECT_URLS
+    local data = request:data()
+    if data.r and rs[data.r] then
+        response:forward(rs[data.r])
+    else
+        response:forward(".index.lsp")
+    end
+?>

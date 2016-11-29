@@ -1,0 +1,104 @@
+print("-- initialize app")
+AUTH_DIR=ba.create.dir(nil, 2)
+local homeio = ba.openio("home")
+UPLOADIO = ba.mkio(homeio, "upload/")
+WORKIO = ba.mkio(homeio, "work/")
+UPLOADER = ba.create.upload(UPLOADIO, 4)
+REDIRECT_URLS = {
+    ["logout"] = ".logout.lsp",
+    ["filemanager"] = ".filemanager.lsp",
+    ["upload"] = ".upload.lsp",
+    ["active"] = ".active.lsp",
+    ["remove"] = ".remove.lsp",
+    ["download"] = ".download.lsp",
+    ["update"] = ".update.lsp",
+}
+
+local function getLines(str)
+    local offset = 1
+    return function()
+        local ret
+        local ss, se = string.find(str, "\r?\n", offset)
+        if ss then
+            ret = string.sub(str, offset, ss - 1)
+            offset = se + 1
+        else
+            ret = nil
+        end
+        return ret
+    end
+end
+
+function LOAD_FILE(app)
+    local cur = app.CURRENT
+    local f = app.UPLOADIO:open(cur.file, "r")
+    local content = f:read("*a")
+    for s in getLines(content) do
+        table.insert(cur, s)
+    end
+    f:close()
+end
+
+function SAVE_FILE(app)
+    local cur = app.CURRENT
+    if cur.diff and #(cur.diff) > 0 then
+        file = app.UPLOADIO:open(cur.file, "w")
+        for i, s in ipairs(cur) do
+            file:write(s)
+            file:write("\n")
+        end
+        file:close()
+        cur.diff = {}
+        app.WORKIO:remove(cur.file)
+    end
+end
+
+function LOAD_DIFF(app)
+    local cur = app.CURRENT
+    local f = app.WORKIO:open(cur.file, "r")
+    if f then
+        cur.diff = {}
+        local content = f:read("*a")
+        local t
+        for s in getLines(content) do
+            t = ba.json.decode(s)
+            table.insert(cur.diff, t)
+            cur[t.line] = string.gsub(cur[t.line], '"(.*)"', '"' .. t.text .. '"')
+        end
+        f:close()
+    end
+end
+
+function SAVE_DIFF(app)
+    local cur = app.CURRENT
+    local file = app.WORKIO:open(cur.file, "w")
+    for i, v in ipairs(cur.diff) do
+        file:write(ba.json.encode(v))
+        file:write("\n")
+    end
+    file:close()
+end
+
+print("-- Set authenticator")
+local dir = AUTH_DIR
+dir:insert()
+local authuser = ba.create.authuser(function(user)
+    if user == "yvanhom" then
+        return "wudiwu123"
+    end
+end)
+local function loginresponse(_ENV, au)
+    local uri = request:uri()
+    if string.match(uri, "^/assets/") then
+        response:forward(uri)
+    else
+        authinfo = au
+        if authinfo.username then
+            ba_info = "Username or Password is not correct!"
+        end
+        response:forward(".login.lsp")
+    end
+end
+local authenticator=ba.create.authenticator(
+   authuser,{type="form", response=loginresponse})
+dir:setauth(authenticator)
