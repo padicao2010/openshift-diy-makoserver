@@ -54,3 +54,5 @@ kill `ps -ef | grep mako | grep -v grep | awk '{ print $2 }'`
 
 Refer to branch [pfm](https://github.com/padicao2010/openshift-diy-makoserver/tree/pfm), a Personal Finance Manager.
 
+Refer to branch [trpy](https://github.com/padicao2010/openshift-diy-makoserver/tree/trpy), a tool for Translating Ren'Py scripts.
+
