@@ -1,3 +1,6 @@
+<?lsp
+        response:setheader("Content-Type", "text/html")
+?>
 <!DOCTYPE html>
 <html>
     <head>
