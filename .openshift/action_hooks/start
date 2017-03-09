@@ -40,10 +40,10 @@ strong "Link mydata dir"
 if [ ! -d "${MYDIR}" ]; then                                                    
     mkdir -p ${MYDIR}                                                           
 fi                                                                              
-if [ ! -d "${MAKODIR}/mydata" ]; then                                             
-    ln -s $MYDIR ${MAKODIR}/mydata                                                
+if [ ! -d "${RUNDIR}/mydata" ]; then                                             
+    ln -s $MYDIR ${RUNDIR}/mydata                                                
 fi
 
 strong "Start MakoServer"
 cd ${RUNDIR}
-nohup ${MAKODIR}/mako -c ${MAKODIR}/mako.conf 2>&1 > $LOGFILE
+nohup ${MAKODIR}/mako -c ${MAKODIR}/mako.conf 2>&1 > $LOGFILE &
