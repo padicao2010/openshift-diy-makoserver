@@ -13,6 +13,8 @@ strong() {
 RUNDIR=${OPENSHIFT_REPO_DIR}
 MAKODIR=${OPENSHIFT_REPO_DIR}/mako
 DBDIR=${OPENSHIFT_DATA_DIR}/db
+MYDIR=${OPENSHIFT_DATA_DIR}/mydata
+LOGFILE=${OPENSHIFT_LOG_DIR}/mako.log
 
 strong "Generate mako.conf"
 cat << EOF > ${MAKODIR}/mako.conf
@@ -34,6 +36,14 @@ if [ ! -d "${MAKODIR}/data" ]; then
     ln -s $DBDIR ${MAKODIR}/data
 fi
 
+strong "Link mydata dir"
+if [ ! -d "${MYDIR}" ]; then                                                    
+    mkdir -p ${MYDIR}                                                           
+fi                                                                              
+if [ ! -d "${MAKODIR}/mydata" ]; then                                             
+    ln -s $MYDIR ${MAKODIR}/mydata                                                
+fi
+
 strong "Start MakoServer"
 cd ${RUNDIR}
-${MAKODIR}/mako -c ${MAKODIR}/mako.conf -d
+nohup ${MAKODIR}/mako -c ${MAKODIR}/mako.conf 2>&1 > $LOGFILE
