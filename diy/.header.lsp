@@ -8,8 +8,8 @@
         <link rel="shortcut icon" href="/assets/imgs/favicon.ico">
     </head>
     <body>
-            <nav class="navbar navbar-default navbar-static-top" role="navigation">
-                <div class="container">
+        <nav class="navbar navbar-default navbar-static-top" role="navigation">
+            <div class="container">
                 <div class="navbar-header">
                     <button type="button" class="navbar-toggle collapsed" data-toggle="collapse" data-target=".bs-navbar-collapse-1">
                         <span class="sr-only">捭阖翻翻翻 之 青城</span>
@@ -28,5 +28,5 @@
                         <li <?lsp= active.contact and 'class="active"' or '' ?>><a href="<?lsp= app.root .. 'contact' ?>"><span class="glyphicon glyphicon-list" aria-hidden="true"></span> 其它</a></li>
                     </ul>
                 </div>
-                </div>
-            </nav>
+            </div>
+        </nav>
