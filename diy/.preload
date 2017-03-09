@@ -1,0 +1,117 @@
+package.path = package.path .. ";./libs/?.lua;./libs/?/init.lua"
+
+DATADIR = "mydata"
+STRINGFILE = "Aoishiro.txt"
+LOGFILE = "update.log"
+DICTFILE = "dict.map"
+MSGFILE = "msg.list"
+STAFFFILE = "staff.list"
+
+root = dir:baseuri()
+local homeio = ba.openio("home")
+dataio = ba.mkio(homeio, DATADIR)
+
+FILESPERPAGE = 10
+STRINGSPERPAGE = 10
+
+print("-- Set redirector")
+local function getQueries(p)
+    local ret = {}
+    
+    for s in string.gmatch(p, "([^/]+)/?") do
+        table.insert(ret, s)
+    end
+    return ret
+end
+
+local root = app.root
+local function redirect(_ENV, path)
+    if response:isforward() then
+        return false
+    elseif string.find(path, "^assets/") then
+        return false
+    else
+        queries = getQueries(path)
+        if #queries == 0 then
+            response:forward(root .. ".index.lsp")
+        else
+            response:forward(string.format("%s.%s.lsp", root, queries[1]))
+        end
+    end
+end
+redirect_dir = ba.create.dir(dir:name(), 1)
+redirect_dir:setfunc(redirect)
+redirect_dir:insert()
+
+do
+    local plpretty = require "pl.pretty"
+    
+    _G.print("LOADING stringfile")
+    local f = dataio:open(STRINGFILE)
+    local s = f:read("*a")
+    stringtable = plpretty.read(s)
+    
+    if dataio:stat(LOGFILE) then
+        _G.print("LOADING logfile")
+        f = dataio:open(LOGFILE, "rb")
+        s = f:read("*a")
+        f:close()
+        local offset = 1
+        while offset <= #s do
+            local fileIndex, lineIndex, len = string.unpack("<I2I2I2", s, offset)
+            local as = string.sub(s, offset + 6, offset + 6 + len - 1)
+            local strs = stringtable[fileIndex]
+            local st = strs[lineIndex]
+            st[#st] = as
+            if not st.translated then
+                st.translated = true
+                strs.translated = strs.translated + 1
+            end
+            offset = offset + 6 + len
+        end
+    end
+end
+
+do
+    dictMap = {}
+    dictCount = 0
+    if dataio:stat(DICTFILE) then
+        _G.print("LOADING dictfile")
+        f = dataio:open(DICTFILE, "rb")
+        s = f:read("*a")
+        f:close()
+        local offset = 1
+        while offset <=#s do
+            local klen, vlen = string.unpack("<I2I2", s, offset)
+            local ks = string.sub(s, offset + 4, offset + 4 + klen - 1)
+            local vs = string.sub(s, offset + 4 + klen, offset + 4 + klen + vlen - 1)
+            if not dictMap[ks] then
+                dictCount = dictCount + 1
+            end
+            dictMap[ks] = vs
+            
+            offset = offset + 4 + klen + vlen
+        end
+    end
+end
+
+do
+    staff = { tester = {}, translator = {} }
+    if dataio:stat(STAFFFILE) then
+        _G.print("LOADING stafffile")
+        f = dataio:open(STAFFFILE, "rb")
+        s = f:read("*a")
+        f:close()
+        local offset = 1
+        while offset <=#s do
+            local role, nlen = string.unpack("<I2I2", s, offset)
+            local name = string.sub(s, offset + 4, offset + 4 + nlen - 1)
+            if role == 0 then
+                staff.translator[name] = true
+            else
+                staff.tester[name] = true
+            end
+            offset = offset + 4 + nlen
+        end
+    end
+end
