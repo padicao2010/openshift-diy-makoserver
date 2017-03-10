@@ -75,6 +75,7 @@ do
     
     numAllStr = 0
     numTranslatedStr = 0
+    numUpdateStr = 0
     for i, strs in ipairs(stringtable) do
         numAllStr = numAllStr + #strs
         numTranslatedStr = numTranslatedStr + strs.translated

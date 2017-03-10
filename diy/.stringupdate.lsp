@@ -44,6 +44,7 @@
                 end
             end
             assert(output:write(outs))
+            app.numUpdateStr = app.numUpdateStr + 1
             trgts[#trgts] = s
             if not trgts.translated then
                 _G.print("Translated " .. index)
