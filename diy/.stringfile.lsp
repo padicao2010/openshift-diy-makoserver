@@ -2,13 +2,14 @@
     active = { stringlist =  true }
 
     fileIndex = 1
+    fileCount = #(app.stringtable)
     if queries[2] then
         fileIndex = tonumber(queries[2])
-        if not fileIndex or fileIndex <=0 or fileIndex > #(app.stringtable) then
+        if not fileIndex or fileIndex <=0 or fileIndex > fileCount then
             if not fileIndex then
                 errorMsg = string.format("无效文件编号 '%s'。", queries[2])
             else
-                errorMsg = string.format("文件编号 '%d' 不在范围之内 [%d, %d]。", fileIndex, 1, #(app.stringtable))
+                errorMsg = string.format("文件编号 '%d' 不在范围之内 [%d, %d]。", fileIndex, 1, fileCount)
             end
             response:forward(app.root .. ".error.lsp")
             return
@@ -101,9 +102,14 @@
                          </div>
                     </form>
 
-<?lsp 
-    response:include(app.root .. ".pages.lsp")
-?>
+                    <nav aria-label="...">
+                      <ul class="pager">
+                        <li <?lsp= fileIndex<=1 and "class='disabled'" or "" ?>><a <?lsp= fileIndex > 1 and string.format("href='%sstringfile/%d'", app.root, fileIndex - 1) or "" ?>>上一个文件</a></li>
+                        <li <?lsp= pageIndex<=1 and "class='disabled'" or "" ?>><a <?lsp= pageIndex > 1 and string.format("href='%s/%d'", pageUrl, pageIndex - 1) or "" ?>>上一页</a></li>
+                        <li <?lsp= pageIndex>=pageCount and "class='disabled'" or "" ?>><a <?lsp= pageIndex < pageCount and string.format("href='%s/%d'", pageUrl, pageIndex + 1) or "" ?>>下一页</a></li>
+                        <li <?lsp= fileIndex>=fileCount and "class='disabled'" or "" ?>><a <?lsp= fileIndex < fileCount and string.format("href='%sstringfile/%d'", app.root, fileIndex + 1) or "" ?>>下一个文件</a></li>
+                      </ul>
+                    </nav>
                     
                 </div>
             </div>
