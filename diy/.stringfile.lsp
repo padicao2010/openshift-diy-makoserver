@@ -74,6 +74,7 @@
     for i = stringFrom, stringTo do
         local s = strs[i]
 ?>
+
                         <ul class="list-group">
                             <li class="list-group-item">
                                 <?lsp= i ?>:

@@ -9,6 +9,12 @@
         <meta name="viewport" content="width=device-width, initial-scale=1.0">
         <link href="/assets/css/bootstrap.min.css" rel="stylesheet">
         <link rel="shortcut icon" href="/assets/imgs/favicon.ico">
+        <style type="text/css">
+        mark {
+         white-space: pre-wrap;
+         word-wrap: normal;
+        }
+        </style>
     </head>
     <body>
         <nav class="navbar navbar-default navbar-static-top" role="navigation">
