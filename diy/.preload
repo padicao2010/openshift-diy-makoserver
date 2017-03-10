@@ -30,6 +30,8 @@ local function redirect(_ENV, path)
         return false
     elseif string.find(path, "^assets/") then
         return false
+    elseif string.find(path, "^favicon.ico$") then
+        response:forward(root .. "assets/imgs/favicon.ico")
     else
         queries = getQueries(path)
         if #queries == 0 then
@@ -69,6 +71,13 @@ do
             end
             offset = offset + 6 + len
         end
+    end
+    
+    numAllStr = 0
+    numTranslatedStr = 0
+    for i, strs in ipairs(stringtable) do
+        numAllStr = numAllStr + #strs
+        numTranslatedStr = numTranslatedStr + strs.translated
     end
 end
 
