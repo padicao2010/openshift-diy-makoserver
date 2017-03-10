@@ -19,33 +19,34 @@
     pageIndex = 1
     stringCount = #(strs)
     perPage = app.STRINGSPERPAGE
+    pageCount = math.ceil(stringCount / perPage)
     if queries[3] then
         pageIndex = tonumber(queries[3])
-        if pageIndex == -1 then
+        if pageIndex and pageIndex == -1 then
             if strs.translated == #strs then
-                errorMsg = "所有行都已翻译，无法跳转。"
+                errorMsg = "本文件所有行都已翻译，无法跳转。"
                 response:forward(app.root .. ".error.lsp")
                 return
             end
             for i = 1, #strs do
                 if not strs[i].translated then
                     pageIndex = math.ceil(i / perPage);
-                    break
+                    response:sendredirect(string.format("%sstringfile/%d/%d", app.root, fileIndex, pageIndex))
+                    return
                 end
             end
         end
-        if not pageIndex or pageIndex <=0 or pageIndex > stringCount then
+        if not pageIndex or pageIndex <=0 or pageIndex > pageCount then
             if not pageIndex then
                 errorMsg = string.format("无效页号 '%s'。", queries[3])
             else
-                errorMsg = string.format("页号 '%d' 不在范围之内 [%d, %d]。", pageIndex, 1, stringCount)
+                errorMsg = string.format("页号 '%d' 不在范围之内 [%d, %d]。", pageIndex, 1, pageCount)
             end
             response:forward(app.root .. ".error.lsp")
             return
         end
     end
 
-    pageCount = math.ceil(stringCount / perPage)
     pageUrl = string.format("%sstringfile/%d", app.root, fileIndex)
     
     stringFrom = pageIndex * perPage - perPage + 1

@@ -9,6 +9,21 @@
     
     if queries[2] then
         pageIndex = tonumber(queries[2])
+        if pageIndex and pageIndex == -1 then
+            for i, strs in ipairs(app.stringtable) do
+                if strs.translated < #strs then
+                    for j, st in ipairs(strs) do
+                        if not st.translated then
+                            response:sendredirect(string.format("%sstringfile/%d/%d", app.root, i, j))
+                            return
+                        end
+                    end
+                end
+            end
+            errorMsg = "所有文件已翻译，无法跳转。"
+            response:forward(app.root .. ".error.lsp")
+            return
+        end
         if not pageIndex or pageIndex <=0 or pageIndex > pageCount then
             if not pageIndex then
                 errorMsg = string.format("无效页号 '%s'。", queries[2])
@@ -33,6 +48,7 @@
                     <form action="<?lsp= app.root .. 'searchfile'?>" class="form-inline">
                         <input type="text" class="form-control" name="filepattern" placeholder="Example: a1_root">
                         <button type="submit" class="btn btn-default">查找</button>
+                        <a role="button" class="btn" href="<?lsp= string.format("%sstringlist/-1", app.root) ?>">直达未翻译的文件</a>
                     </form>
                     <hr />
 <?lsp
