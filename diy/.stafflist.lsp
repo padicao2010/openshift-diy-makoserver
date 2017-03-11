@@ -16,14 +16,6 @@
     end
 ?>
                     </p>
-                    <h3>测试者</h3>
-<?lsp
-    for n, _ in pairs(staff.tester) do
-?>
-                        <span class="glyphicon glyphicon-user"></span><?lsp= n ?>
-<?lsp
-    end
-?>
                 </div>
             </div>
         </div>
