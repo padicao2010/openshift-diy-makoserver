@@ -6,7 +6,7 @@
         <div class="container">
             <div class="row">
                 <div class="col-sm-10 col-sm-offset-1 col-md-8 col-md-offset-2">
-                    <h3>诚心为本，加入名单……</h3>
+                    <h3>诚信为本，志愿为主，加入名单……</h3>
                     <form action="<?lsp= app.root .. 'addstaff' ?>">
                       <div class="form-group">
                         <label for="username">用户昵称</label>
