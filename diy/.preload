@@ -15,6 +15,23 @@ FILESPERPAGE = 10
 STRINGSPERPAGE = 10
 
 print("-- Set redirector")
+local directMap = {
+    ["adddict"] = true,
+    ["addmsg"] = true,
+    ["addstaff"] = true,
+    ["contact"] = true,
+    ["dictfrom"] = true,
+    ["dictionary"] = true,
+    ["dictlist"] = true,
+    ["error"] = true,
+    ["notice"] = true,
+    ["searchdict"] = true,
+    ["searchfile"] = true,
+    ["stafflist"] = true,
+    ["stringfile"] = true,
+    ["stringlist"] = true,
+    ["stringupdate"] = true,
+}
 local function getQueries(p)
     local ret = {}
     
@@ -28,16 +45,14 @@ local root = app.root
 local function redirect(_ENV, path)
     if response:isforward() then
         return false
-    elseif string.find(path, "^assets/") then
-        return false
-    elseif string.find(path, "^favicon.ico$") then
-        response:forward(root .. "assets/imgs/favicon.ico")
     else
         queries = getQueries(path)
         if #queries == 0 then
             response:forward(root .. ".index.lsp")
-        else
+        elseif directMap[queries[1]] then
             response:forward(string.format("%s.%s.lsp", root, queries[1]))
+        else
+            return false
         end
     end
 end
