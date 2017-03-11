@@ -31,6 +31,8 @@
         if not s then
             break
         end
+
+        s = string.gsub(s, "\r\n", "\n")
         
         local trgts = strs[index]
         if trgts[#trgts] ~= s then
