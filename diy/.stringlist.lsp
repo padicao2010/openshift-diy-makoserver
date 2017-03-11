@@ -14,7 +14,7 @@
                 if strs.translated < #strs then
                     for j, st in ipairs(strs) do
                         if not st.translated then
-                            response:sendredirect(string.format("%sstringfile/%d/%d", app.root, i, j))
+                            response:sendredirect(string.format("%sstringfile/%d/-1", app.root, i))
                             return
                         end
                     end

@@ -20,7 +20,6 @@ local directMap = {
     ["addmsg"] = true,
     ["addstaff"] = true,
     ["contact"] = true,
-    ["dictfrom"] = true,
     ["dictionary"] = true,
     ["dictlist"] = true,
     ["error"] = true,
