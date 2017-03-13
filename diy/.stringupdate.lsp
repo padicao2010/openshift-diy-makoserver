@@ -17,7 +17,7 @@
     local strs = app.stringtable[fileIndex]
     
     local stringIndex = tonumber(data.lineindex or 0)
-    if not stringIndex or stringIndex <=0 or stringIndex > #strs then
+    if not stringIndex or stringIndex <=0 or stringIndex > (#strs - 5) then
         errorMsg = "行编号错误：" .. tostring(stringIndex)
         response:forward(app.root .. ".error.lsp")
         return
@@ -34,7 +34,7 @@
 
         s = string.gsub(s, "\r\n", "\n")
         
-        local trgts = strs[index]
+        local trgts = strs[index + 5]
         if trgts[#trgts] ~= s then
             local outs = string.pack(string.format("<I2I2I2c%d", #s), fileIndex, index, #s, s)
             if not output then
@@ -48,10 +48,10 @@
             assert(output:write(outs))
             app.numUpdateStr = app.numUpdateStr + 1
             trgts[#trgts] = s
-            if not trgts.translated then
+            if trgts[2] == 0 then
                 _G.print("Translated " .. index)
-                trgts.translated = true
-                strs.translated = strs.translated + 1
+                trgts[2] = 1
+                strs[4] = strs[4] + 1
             else
                 _G.print("Update " .. index)
             end

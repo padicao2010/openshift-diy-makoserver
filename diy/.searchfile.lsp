@@ -13,7 +13,7 @@
     ts = {}
     matchCount = 0
     for i, strs in ipairs(app.stringtable) do
-        if string.find(strs.path, filePattern) then
+        if string.find(strs[2], filePattern) then
             ts[i] = strs
             matchCount = matchCount + 1
         end
@@ -41,15 +41,15 @@
                       <a href="<?lsp= string.format('%sstringfile/%d', app.root, i) ?>" class="list-group-item">
                         <h4 class="list-group-item-heading">
                             <?lsp= i?>.
-                            <?lsp= strs.parent ?> 
+                            <?lsp= strs[1] ?> 
                             <strong class="text-primary">/</strong> 
-                            <?lsp= strs.path ?>
+                            <?lsp= strs[2] ?>
                             <strong class="text-primary">:</strong> 
-                            <small>共 <strong class="text-success"><?lsp= #strs ?></strong> 行，
-                            已翻译 <strong class="text-success"><?lsp= strs.translated ?></strong> 行</small>
+                            <small>共 <strong class="text-success"><?lsp= (#strs - 5) ?></strong> 行，
+                            已翻译 <strong class="text-success"><?lsp= strs[4] ?></strong> 行</small>
                         </h4>
                         <p>
-                            <?lsp= strs.desc or "无描述" ?>
+                            <?lsp= strs[3] or "无描述" ?>
                         </p>
                       </a>
                     </div>

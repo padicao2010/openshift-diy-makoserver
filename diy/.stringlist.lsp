@@ -11,9 +11,9 @@
         pageIndex = tonumber(queries[2])
         if pageIndex and pageIndex == -1 then
             for i, strs in ipairs(app.stringtable) do
-                if strs.translated < #strs then
-                    for j, st in ipairs(strs) do
-                        if not st.translated then
+                if strs[4] < (#strs - 5) then
+                    for j = 6, #strs do do
+                        if sts[j][2] == 0 then
                             response:sendredirect(string.format("%sstringfile/%d/-1", app.root, i))
                             return
                         end
@@ -58,13 +58,13 @@
                     <div class="list-group">
                       <a href="<?lsp= string.format('%sstringfile/%d', app.root, i) ?>" class="list-group-item">
                         <h4 class="list-group-item-heading">
-                            <?lsp= i?>.
-                            <?lsp= file.parent ?> 
+                            <?lsp= i ?>.
+                            <?lsp= file[1] ?> 
                             <strong class="text-primary">/</strong> 
-                            <?lsp= file.path ?>
+                            <?lsp= file[2] ?>
                             <strong class="text-primary">:</strong> 
-                            <small>共 <strong class="text-success"><?lsp= #file ?></strong> 行，
-                            已翻译 <strong class="text-success"><?lsp= file.translated ?></strong> 行</small>
+                            <small>共 <strong class="text-success"><?lsp= #file - 5 ?></strong> 行，
+                            已翻译 <strong class="text-success"><?lsp= file[4] ?></strong> 行</small>
                         </h4>
                         <p>
                             <?lsp= file.desc or "无描述" ?>

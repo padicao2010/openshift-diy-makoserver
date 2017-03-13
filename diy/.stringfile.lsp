@@ -18,20 +18,20 @@
     strs = app.stringtable[fileIndex]
     
     pageIndex = 1
-    stringCount = #(strs)
+    stringCount = #(strs) - 5
     perPage = app.STRINGSPERPAGE
     pageCount = math.ceil(stringCount / perPage)
     if queries[3] then
         pageIndex = tonumber(queries[3])
         if pageIndex and pageIndex == -1 then
-            if strs.translated == #strs then
+            if strs[4] == #strs then
                 errorMsg = "本文件所有行都已翻译，无法跳转。"
                 response:forward(app.root .. ".error.lsp")
                 return
             end
-            for i = 1, #strs do
-                if not strs[i].translated then
-                    pageIndex = math.ceil(i / perPage);
+            for i = 6, #strs do
+                if strs[i][2] == 0 then
+                    pageIndex = math.ceil((i - 5) / perPage);
                     response:sendredirect(string.format("%sstringfile/%d/%d", app.root, fileIndex, pageIndex))
                     return
                 end
@@ -59,33 +59,33 @@
             <div class="row">
                 <div class="col-sm-10 col-sm-offset-1 col-md-8 col-md-offset-2">
                     <h3>
-                        <?lsp= strs.parent ?> 
+                        <?lsp= strs[1] ?> 
                         <strong class="text-primary">/</strong> 
-                        <?lsp= strs.path ?>
+                        <?lsp= strs[2] ?>
                     </h3>
                     <p>
-                    （总共 <?lsp= stringCount ?> 行，已翻译 <?lsp= strs.translated ?> 行，共 <?lsp= pageCount ?> 页，第 <?lsp= pageIndex ?> 页）
+                    （总共 <?lsp= stringCount ?> 行，已翻译 <?lsp= strs[4] ?> 行，共 <?lsp= pageCount ?> 页，第 <?lsp= pageIndex ?> 页）
                     </p>
                     <p>
-                        <?lsp= strs.desc or "无描述" ?>
+                        <?lsp= strs[3] or "无描述" ?>
                     <hr />
                     <form action="<?lsp= app.root .. 'stringupdate' ?>" method='post'>
 <?lsp
     for i = stringFrom, stringTo do
-        local s = strs[i]
+        local s = strs[i + 5]
 ?>
 
                         <ul class="list-group">
                             <li class="list-group-item">
                                 <?lsp= i ?>:
                                 <?lsp= s.desc or "无描述" ?>
-                                <mark><?lsp= s.translated and "已翻译" or "未翻译" ?></mark> 
+                                <mark><?lsp= s[2] == 1 and "已翻译" or "未翻译" ?></mark> 
                             </li>
-                            <li class="list-group-item">原：<mark class="bg-danger"><?lsp= s[1] ?></mark></li>
+                            <li class="list-group-item">原：<mark class="bg-danger"><?lsp= s[3] ?></mark></li>
 <?lsp
-    if #s == 3 then
+    if #s == 5 then
 ?>
-                            <li class="list-group-item">英：<mark class="bg-danger"><?lsp=  s[2] ?></mark></li>
+                            <li class="list-group-item">英：<mark class="bg-danger"><?lsp=  s[4] ?></mark></li>
 <?lsp
     end
 ?>
