@@ -1,5 +1,5 @@
 <?lsp
-    active = { home =  true }
+    active = { notice =  true }
     response:include(app.root .. ".header.lsp")
 ?>
         <div class="container">

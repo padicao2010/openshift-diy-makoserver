@@ -78,7 +78,7 @@
                         <ul class="list-group">
                             <li class="list-group-item">
                                 <?lsp= i ?>:
-                                <?lsp= s.desc or "无描述" ?>
+                                <?lsp= s[1] or "无描述" ?>
                                 <mark><?lsp= s[2] == 1 and "已翻译" or "未翻译" ?></mark> 
                             </li>
                             <li class="list-group-item">原：<mark class="bg-danger"><?lsp= s[3] ?></mark></li>

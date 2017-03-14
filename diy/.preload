@@ -79,9 +79,9 @@ do
             local strs = stringtable[fileIndex]
             local st = strs[lineIndex]
             st[#st] = as
-            if not st.translated then
-                st.translated = true
-                strs.translated = strs.translated + 1
+            if st[2] == 0 then
+                st[2] = 1
+                strs[4] = strs[4] + 1
             end
             offset = offset + 6 + len
         end
@@ -92,7 +92,7 @@ do
     numUpdateStr = 0
     for i, strs in ipairs(stringtable) do
         numAllStr = numAllStr + #strs
-        numTranslatedStr = numTranslatedStr + strs.translated
+        numTranslatedStr = numTranslatedStr + strs[4]
     end
 end
 

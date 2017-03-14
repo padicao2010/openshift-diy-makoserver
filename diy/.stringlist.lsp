@@ -1,5 +1,5 @@
 <?lsp
-    active = { stringlist =  true }
+    active = { stringlist = true }
 
     pageIndex = 1
     fileCount = #(app.stringtable)
@@ -12,8 +12,8 @@
         if pageIndex and pageIndex == -1 then
             for i, strs in ipairs(app.stringtable) do
                 if strs[4] < (#strs - 5) then
-                    for j = 6, #strs do do
-                        if sts[j][2] == 0 then
+                    for j = 6, #strs do
+                        if strs[j][2] == 0 then
                             response:sendredirect(string.format("%sstringfile/%d/-1", app.root, i))
                             return
                         end
@@ -67,7 +67,7 @@
                             已翻译 <strong class="text-success"><?lsp= file[4] ?></strong> 行</small>
                         </h4>
                         <p>
-                            <?lsp= file.desc or "无描述" ?>
+                            <?lsp= file[3] or "无描述" ?>
                         </p>
                       </a>
                     </div>
