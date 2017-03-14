@@ -91,7 +91,7 @@ do
     numTranslatedStr = 0
     numUpdateStr = 0
     for i, strs in ipairs(stringtable) do
-        numAllStr = numAllStr + #strs
+        numAllStr = numAllStr + #strs - 5
         numTranslatedStr = numTranslatedStr + strs[4]
     end
 end
