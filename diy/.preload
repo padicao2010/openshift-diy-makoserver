@@ -77,7 +77,7 @@ do
             local fileIndex, lineIndex, len = string.unpack("<I2I2I2", s, offset)
             local as = string.sub(s, offset + 6, offset + 6 + len - 1)
             local strs = stringtable[fileIndex]
-            local st = strs[lineIndex]
+            local st = strs[lineIndex + 5]
             st[#st] = as
             if st[2] == 0 then
                 st[2] = 1
