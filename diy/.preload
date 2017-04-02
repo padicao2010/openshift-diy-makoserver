@@ -1,9 +1,7 @@
 package.path = package.path .. ";./libs/?.lua;./libs/?/init.lua"
 
 DATADIR = "mydata"
-STRINGFILE = "Aoishiro.txt"
-LOGFILE = "update.log"
-DICTFILE = "dict.map"
+
 MSGFILE = "msg.list"
 STAFFFILE = "staff.list"
 
@@ -11,25 +9,14 @@ root = dir:baseuri()
 local homeio = ba.openio("home")
 dataio = ba.mkio(homeio, DATADIR)
 
-FILESPERPAGE = 10
-STRINGSPERPAGE = 10
-
 print("-- Set redirector")
 local directMap = {
-    ["adddict"] = true,
     ["addmsg"] = true,
     ["addstaff"] = true,
     ["contact"] = true,
-    ["dictionary"] = true,
-    ["dictlist"] = true,
     ["error"] = true,
     ["notice"] = true,
-    ["searchdict"] = true,
-    ["searchfile"] = true,
     ["stafflist"] = true,
-    ["stringfile"] = true,
-    ["stringlist"] = true,
-    ["stringupdate"] = true,
 }
 local function getQueries(p)
     local ret = {}
@@ -58,66 +45,6 @@ end
 redirect_dir = ba.create.dir(dir:name(), 1)
 redirect_dir:setfunc(redirect)
 redirect_dir:insert()
-
-do
-    local plpretty = require "pl.pretty"
-    
-    _G.print("LOADING stringfile")
-    local f = dataio:open(STRINGFILE)
-    local s = f:read("*a")
-    stringtable = plpretty.read(s)
-    
-    if dataio:stat(LOGFILE) then
-        _G.print("LOADING logfile")
-        f = dataio:open(LOGFILE, "rb")
-        s = f:read("*a")
-        f:close()
-        local offset = 1
-        while offset <= #s do
-            local fileIndex, lineIndex, len = string.unpack("<I2I2I2", s, offset)
-            local as = string.sub(s, offset + 6, offset + 6 + len - 1)
-            local strs = stringtable[fileIndex]
-            local st = strs[lineIndex + 5]
-            st[#st] = as
-            if st[2] == 0 then
-                st[2] = 1
-                strs[4] = strs[4] + 1
-            end
-            offset = offset + 6 + len
-        end
-    end
-    
-    numAllStr = 0
-    numTranslatedStr = 0
-    numUpdateStr = 0
-    for i, strs in ipairs(stringtable) do
-        numAllStr = numAllStr + #strs - 5
-        numTranslatedStr = numTranslatedStr + strs[4]
-    end
-end
-
-do
-    dictMap = {}
-    dictCount = 0
-    if dataio:stat(DICTFILE) then
-        _G.print("LOADING dictfile")
-        f = dataio:open(DICTFILE, "rb")
-        s = f:read("*a")
-        f:close()
-        local offset = 1
-        while offset <=#s do
-            local klen, vlen = string.unpack("<I2I2", s, offset)
-            local ks = string.sub(s, offset + 4, offset + 4 + klen - 1)
-            local vs = string.sub(s, offset + 4 + klen, offset + 4 + klen + vlen - 1)
-            if not dictMap[ks] then
-                dictCount = dictCount + 1
-            end
-            dictMap[ks] = vs
-            
-            offset = offset + 4 + klen + vlen
-        end
-    end
-end
 
 do
     staff = { tester = {}, translator = {} }

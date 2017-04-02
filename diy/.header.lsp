@@ -31,8 +31,8 @@
                 <div class="collapse navbar-collapse bs-navbar-collapse-1">
                     <ul class="nav navbar-nav navbar-right">
                         <li <?lsp= active.home and 'class="active"' or '' ?>><a href="<?lsp= app.root ?>"><span class="glyphicon glyphicon-home" aria-hidden="true"></span> 首页</a></li>
-                        <li <?lsp= active.stringlist and 'class="active"' or '' ?>><a href="<?lsp= app.root .. 'stringlist' ?>"><span class="glyphicon glyphicon-th-list" aria-hidden="true"></span> 文本列表</a></li>
-                        <li <?lsp= active.dictionary and 'class="active"' or '' ?>><a href="<?lsp= app.root .. 'dictionary'?>"><span class="glyphicon glyphicon-font" aria-hidden="true"></span> 用语词典</a></li>
+                        <li <?lsp= active.stringlist and 'class="active"' or '' ?>><a href="https://tr.fanfanfan.online/project/p3/files"><span class="glyphicon glyphicon-th-list" aria-hidden="true"></span> 文本列表</a></li>
+                        <li <?lsp= active.dictionary and 'class="active"' or '' ?>><a href="https://tr.fanfanfan.online/project/p3/dicts"><span class="glyphicon glyphicon-font" aria-hidden="true"></span> 用语词典</a></li>
                         <li <?lsp= active.notice and 'class="active"' or '' ?>><a href="<?lsp= app.root .. 'notice' ?>"><span class="glyphicon glyphicon-warning-sign" aria-hidden="true"></span> 注意事项</a></li>
                         <li <?lsp= active.contact and 'class="active"' or '' ?>><a href="<?lsp= app.root .. 'contact' ?>"><span class="glyphicon glyphicon-option-horizontal" aria-hidden="true"></span> 其它</a></li>
                     </ul>
