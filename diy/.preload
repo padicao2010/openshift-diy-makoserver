@@ -2,21 +2,12 @@ package.path = package.path .. ";./libs/?.lua;./libs/?/init.lua"
 
 DATADIR = "mydata"
 
-MSGFILE = "msg.list"
-STAFFFILE = "staff.list"
-
 root = dir:baseuri()
-local homeio = ba.openio("home")
-dataio = ba.mkio(homeio, DATADIR)
 
 print("-- Set redirector")
 local directMap = {
-    ["addmsg"] = true,
-    ["addstaff"] = true,
-    ["contact"] = true,
     ["error"] = true,
     ["notice"] = true,
-    ["stafflist"] = true,
 }
 local function getQueries(p)
     local ret = {}
@@ -45,24 +36,3 @@ end
 redirect_dir = ba.create.dir(dir:name(), 1)
 redirect_dir:setfunc(redirect)
 redirect_dir:insert()
-
-do
-    staff = { tester = {}, translator = {} }
-    if dataio:stat(STAFFFILE) then
-        _G.print("LOADING stafffile")
-        f = dataio:open(STAFFFILE, "rb")
-        s = f:read("*a")
-        f:close()
-        local offset = 1
-        while offset <=#s do
-            local role, nlen = string.unpack("<I2I2", s, offset)
-            local name = string.sub(s, offset + 4, offset + 4 + nlen - 1)
-            if role == 0 then
-                staff.translator[name] = true
-            else
-                staff.tester[name] = true
-            end
-            offset = offset + 4 + nlen
-        end
-    end
-end

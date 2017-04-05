@@ -5,9 +5,13 @@
         <div class="container">
             <div class="row">
                 <div class="col-sm-10 col-sm-offset-1 col-md-8 col-md-offset-2">
+                    <h3>本站由于更新，功能替换，删减，导致部分旧有数据不以显示，还请见谅</h3>
                     <h3>关于本站</h3>
                     <ul>
-                        <li> 本站给有些许闲暇、喜爱《青城》的人提供的汉化合作服务。欢迎语言达人们到<a href="https://tr.fanfanfan.online/project/p3/files">文本列表</a>中进行游戏文本的翻译、润色。有事告知站长，可以到<a href="<?lsp= app.root .. 'contact' ?>">其它</a>页面留言。如果有想汉化的游戏，需要程序支持，也可以留言，能帮忙，站长会尽力而为。</li>
+                        <li> 本站给有些许闲暇、喜爱《青城》的人提供的汉化合作服务。</li>
+                        <li> 欢迎语言达人们到<a href="https://tr.fanfanfan.online/project/p3/files">文本列表</a>中进行游戏文本的翻译、润色。有事告知站长，可以到<a href="https://tr.fanfanfan.online/project/p3/comments">留言</a>页面留言。如果有想汉化的游戏，需要程序支持，也可以留言，能帮忙，站长会尽力而为。</li>
+                        <li> 浏览不需要登录，但翻译、修改、留言请顺手注册个用户，登录一下。</li>
+                        <li> 测试用户：TEST，密码：test。</li>
                         <li> 本站尽量保证长时在线，但如果效果不好，或是常常受到攻击，或是已有给力组织接手汉化《青城》，则本站遗憾地难以存活。</li>
                     </ul>
                     <h3>网站使用注意</h3>
